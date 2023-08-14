@@ -1,4 +1,6 @@
 import asyncHandler from "express-async-handler";
+import User from "../models/userModel.js";
+
 // @desc auth user/set token
 // rout POST /api/user/auth
 // @access Public
@@ -24,7 +26,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 // rout Get /api/user/profile
 // @access Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "user profile" });
+  const user = await User.find();
+  res.status(200).json(user);
 });
 
 // @desc  update user profile
