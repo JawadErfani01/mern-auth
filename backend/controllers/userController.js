@@ -5,7 +5,23 @@ import User from "../models/userModel.js";
 // rout POST /api/user/auth
 // @access Public
 const authUser = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Auth user" });
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400);
+    throw new Error("Please add all fields");
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const passwordMatches = await user.comparePassword(password, user.password);
+  if (passwordMatches) {
+    res.status(200).json({ name: user.name, email: user.email });
+  } else {
+    // Password is incorrect
+    return res.status(401).json({ message: "Incorrect password" });
+  }
 });
 
 // @desc register a new user
