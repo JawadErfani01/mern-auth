@@ -12,7 +12,18 @@ const authUser = asyncHandler(async (req, res) => {
 // rout POST /api/user/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "register user" });
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    res.status(400);
+    throw new Error("Please add all fields");
+  }
+  const isUserExist = await User.findOne({ email });
+  if (isUserExist) {
+    res.status(400);
+    throw new Error("This user already exist");
+  }
+  const newUser = await User.create({ name, email, password });
+  res.status(200).json(newUser);
 });
 
 // profile
