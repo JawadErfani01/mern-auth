@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
+import generateToken from "../utils/generateToken.js";
 
 // @desc auth user/set token
 // rout POST /api/user/auth
@@ -10,17 +11,17 @@ const authUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add all fields");
   }
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const passwordMatches = await user.comparePassword(password, user.password);
-  if (passwordMatches) {
-    res.status(200).json({ name: user.name, email: user.email });
+  const newUser = await User.findOne({ email });
+  if (newUser) {
+    const passwordMatches = await newUser.comparePassword(password);
+    if (passwordMatches) {
+      generateToken(res, newUser._id);
+      res.status(200).json({ name: newUser.name, email: newUser.email });
+    } else {
+      res.status(401).json("Invalid Email or Password");
+    }
   } else {
-    // Password is incorrect
-    return res.status(401).json({ message: "Incorrect password" });
+    res.status(401).json("Invalid Email or Password");
   }
 });
 
@@ -39,13 +40,19 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("This user already exist");
   }
   const newUser = await User.create({ name, email, password });
-  res.status(200).json(newUser);
+  if (newUser) {
+    generateToken(res, newUser._id);
+    res.status(201).json(newUser);
+  } else {
+    res.status(400).json("Invalid user data");
+  }
 });
 
 // profile
 // rout POST /api/user/logout
 // @access Public
 const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
   res.status(200).json({ message: "logout user" });
 });
 
