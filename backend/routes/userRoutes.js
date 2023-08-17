@@ -15,6 +15,6 @@ router.post("/logout", logoutUser);
 router
   .route("/profile")
   .get(authMiddleware, getUserProfile)
-  .put(updateUserProfile);
+  .put(authMiddleware, updateUserProfile);
 
 export default router;
