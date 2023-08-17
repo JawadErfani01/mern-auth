@@ -60,15 +60,15 @@ const logoutUser = asyncHandler(async (req, res) => {
 // rout Get /api/user/profile
 // @access Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.find();
-  res.status(200).json(user);
+  const { name, email, _id: id } = req.user;
+  res.status(200).json({ name, email, id });
 });
 
 // @desc  update user profile
 // rout put /api/user/profile
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "update user profile" });
+  res.status(200).json({ message: "updated user" });
 });
 
 export {

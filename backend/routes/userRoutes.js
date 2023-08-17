@@ -6,11 +6,15 @@ import {
   registerUser,
   updateUserProfile,
 } from "../controllers/userController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 const router = express.Router();
 
-router.post("/auth", authUser);
+router.post("/login", authUser);
 router.post("/register", registerUser);
 router.post("/logout", logoutUser);
-router.route("/profile").get(getUserProfile).put(updateUserProfile);
+router
+  .route("/profile")
+  .get(authMiddleware, getUserProfile)
+  .put(updateUserProfile);
 
 export default router;
