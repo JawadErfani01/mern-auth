@@ -68,7 +68,16 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // rout put /api/user/profile
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "updated user" });
+  const userId = req.user._id;
+  const updateUser = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
+  const updatedUser = await User.findOneAndUpdate({ _id: userId }, updateUser, {
+    new: true,
+  });
+  res.status(200).json(updatedUser);
 });
 
 export {
