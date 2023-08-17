@@ -16,7 +16,9 @@ const authUser = asyncHandler(async (req, res) => {
     const passwordMatches = await newUser.comparePassword(password);
     if (passwordMatches) {
       generateToken(res, newUser._id);
-      res.status(200).json({ name: newUser.name, email: newUser.email });
+      res
+        .status(200)
+        .json({ name: newUser.name, email: newUser.email, id: newUser._id });
     } else {
       res.status(401).json("Invalid Email or Password");
     }
@@ -68,16 +70,33 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // rout put /api/user/profile
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const updateUser = {
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  };
-  const updatedUser = await User.findOneAndUpdate({ _id: userId }, updateUser, {
-    new: true,
-  });
-  res.status(200).json(updatedUser);
+  // const userId = req.user._id;
+  // const updateUser = {
+  //   name: req.body.name,
+  //   email: req.body.email,
+  //   password: req.body.password,
+  // };
+  // const updatedUser = await User.findOneAndUpdate({ _id: userId }, updateUser, {
+  //   new: true,
+  // });
+  // res.status(200).json(updatedUser);
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password || user.password;
+    }
+    const updatedUser = await user.save();
+    res.status(200).json({
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      password: updatedUser.password,
+    });
+  } else {
+    res.status(404).json("User not found");
+  }
 });
 
 export {
