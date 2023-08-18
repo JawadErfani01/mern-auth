@@ -70,16 +70,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // rout put /api/user/profile
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  // const userId = req.user._id;
-  // const updateUser = {
-  //   name: req.body.name,
-  //   email: req.body.email,
-  //   password: req.body.password,
-  // };
-  // const updatedUser = await User.findOneAndUpdate({ _id: userId }, updateUser, {
-  //   new: true,
-  // });
-  // res.status(200).json(updatedUser);
   const user = await User.findById(req.user._id);
   if (user) {
     user.name = req.body.name || user.name;
