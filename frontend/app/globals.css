@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+button {
+    margin: 10px;
+    color: whitesmoke;
+    padding: 10px 20px;
+    background-color: rgb(252, 74, 172);
+    border-radius: 14px;
+}
