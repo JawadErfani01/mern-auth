@@ -6,8 +6,6 @@ const authMiddleware = async (req, res, next) => {
     // Get the token from the cookie
     const token = req.cookies.jwt;
     if (!token) {
-      console.log("hello");
-
       return res.status(401).json({ message: "Unauthorized" });
     }
 
