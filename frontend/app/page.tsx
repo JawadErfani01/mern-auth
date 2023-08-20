@@ -14,9 +14,16 @@ const Home = () => {
     <div className="text-center flex justify-center items-center flex-col p-8 ">
       <h1>It is a great counter app</h1>
       <p>Count: {count}</p>
-      <button onClick={() => dispatch(increment())}>Increment</button>
-      <button onClick={() => dispatch(decrement())}>Decrement</button>
-      <button onClick={() => dispatch(incrementByAmount(5))}>
+      <button className="button-style" onClick={() => dispatch(increment())}>
+        Increment
+      </button>
+      <button className="button-style" onClick={() => dispatch(decrement())}>
+        Decrement
+      </button>
+      <button
+        className="button-style"
+        onClick={() => dispatch(incrementByAmount(5))}
+      >
         Increment By Five
       </button>
     </div>
