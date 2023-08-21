@@ -17,7 +17,7 @@ const userPage = () => {
     <div className="text-center">
       {isSuccess && (
         <div>
-          <h1 className="text-3xl">User List</h1>
+          <h1 className="text-3xl m-8">User List</h1>
 
           {data.map((user, index) => {
             return (
